@@ -15,7 +15,7 @@ import java.util.Set;
 public class Client {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private int pin;
