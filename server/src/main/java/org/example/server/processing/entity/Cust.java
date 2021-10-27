@@ -8,23 +8,18 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "ACCOUNT")
+@Table(name = "CUST")
 @NoArgsConstructor
 @Getter
 @Setter
-public class Account {
+public class Cust {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private int balance;
+    private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "custid", nullable = false)
-    private Cust custid;
-
-    @OneToMany(mappedBy = "accid")
-    private Set<Card> cards;
-
+    @OneToMany(mappedBy = "custid")
+    private Set<Account> accounts;
 }

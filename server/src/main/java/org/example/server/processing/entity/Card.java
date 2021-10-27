@@ -5,21 +5,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
-@Table(name = "CUSTOMER")
+@Table(name = "CARD")
 @NoArgsConstructor
 @Getter
 @Setter
-public class Client {
+public class Card {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private String pan;
     private int pin;
 
-    @OneToMany(mappedBy = "custid")
-    private Set<Account> accounts;
+    @ManyToOne
+    @JoinColumn(name = "accid", nullable = false)
+    private Account accid;
 }

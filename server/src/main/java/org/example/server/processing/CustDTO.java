@@ -5,8 +5,8 @@ import lombok.Value;
 import java.util.List;
 
 @Value
-public class Client {
+public class CustDTO {
     private final int id;
-    private final int pin;
-    private final List<Account> accounts;
+    private final String name;
+    private final List<AccountDTO> accounts;
 }
