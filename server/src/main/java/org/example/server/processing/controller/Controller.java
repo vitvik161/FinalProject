@@ -2,12 +2,10 @@ package org.example.server.processing.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
+import org.example.server.processing.CardDTO;
 import org.example.server.processing.CustDTO;
 import org.example.server.processing.service.CustService;
 import org.springframework.web.bind.annotation.*;
-
-
-import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -26,11 +24,17 @@ public class Controller {
         if (hostId != 1) {
             throw new RuntimeException();
         }
-        log.info("custId = "+custId);
+        log.info("custId = " + custId);
         return custService.getCustDTO(custId);
-
-
     }
 
+    @GetMapping("/hosts/{hostId}/cards/{cardPan}")
+    public CardDTO getClientsInfo(@PathVariable Long hostId, @PathVariable("cardPan") String cardPan) {
+        if (hostId != 1) {
+            throw new RuntimeException();
+        }
+        log.info("cardPan = " + cardPan);
+        return custService.getCardDTO(cardPan);
+    }
 
 }

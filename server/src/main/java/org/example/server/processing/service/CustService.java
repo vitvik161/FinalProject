@@ -8,13 +8,13 @@ import org.example.server.processing.entity.Account;
 import org.example.server.processing.entity.Card;
 import org.example.server.processing.entity.Cust;
 import org.example.server.processing.repository.AccountCrudRepository;
+import org.example.server.processing.repository.CardCrudRepository;
 import org.example.server.processing.repository.CustCrudRepository;
 import org.springframework.stereotype.Service;
 import lombok.extern.java.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -22,15 +22,30 @@ import java.util.Set;
 public class CustService {
     private CustCrudRepository custCrudRepository;
     private AccountCrudRepository accountCrudRepository;
+    private CardCrudRepository cardCrudRepository;
+
+    public CardDTO getCardDTO(String pan){
+        Card card = cardCrudRepository.findByPan(pan);
+        //Account account = accountCrudRepository.findById(card.getAccid().getId()).orElseThrow(RuntimeException::new);
+        return new CardDTO( card.getId().intValue(),
+                card.getAccid().getId().intValue(),
+                pan,
+                card.getPin()
+        );
+    }
 
     public CustDTO getCustDTO(long id) {
         Cust cust = custCrudRepository.findById(id).orElseThrow(RuntimeException::new);
-        Set<Account> accounts = cust.getAccounts();
+
+        Iterable<Account> accounts = cust.getAccounts();
         List<AccountDTO> accountDTOList = new ArrayList<>();
+
         for (Account account : accounts) {
             Account acct = accountCrudRepository.findById(account.getId()).orElseThrow(RuntimeException::new);
-            Set<Card> cards = acct.getCards();
+
+            Iterable<Card> cards = acct.getCards();
             List<CardDTO> cardDTOList = new ArrayList<>();
+
             for (Card card : cards) {
                 cardDTOList.add(new CardDTO(card.getId().intValue(), account.getId().intValue(), card.getPan(), card.getPin()));
             }
