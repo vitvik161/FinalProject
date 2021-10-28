@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CardCrudRepository extends CrudRepository<Card, Long> {
-    Card findByPan(String str);
+    Card getCardByPan(String str);
 }

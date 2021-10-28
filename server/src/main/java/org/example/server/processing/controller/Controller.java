@@ -14,17 +14,11 @@ public class Controller {
 
     private CustService custService;
 
-    @GetMapping("/hosts")
-    public String getHostsInfo() {
-        return "{data: \"host 1001 is alive\"}";
-    }
-
     @GetMapping("/hosts/{hostId}/customers/{custId}")
     public CustDTO getClientsInfo(@PathVariable Long hostId, @PathVariable("custId") Long custId) {
         if (hostId != 1) {
             throw new RuntimeException();
         }
-        log.info("custId = " + custId);
         return custService.getCustDTO(custId);
     }
 
@@ -33,7 +27,6 @@ public class Controller {
         if (hostId != 1) {
             throw new RuntimeException();
         }
-        log.info("cardPan = " + cardPan);
         return custService.getCardDTO(cardPan);
     }
 

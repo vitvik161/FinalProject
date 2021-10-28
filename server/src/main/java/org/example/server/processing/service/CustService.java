@@ -25,7 +25,7 @@ public class CustService {
     private CardCrudRepository cardCrudRepository;
 
     public CardDTO getCardDTO(String pan){
-        Card card = cardCrudRepository.findByPan(pan);
+        Card card = cardCrudRepository.getCardByPan(pan);
         //Account account = accountCrudRepository.findById(card.getAccid().getId()).orElseThrow(RuntimeException::new);
         return new CardDTO( card.getId().intValue(),
                 card.getAccid().getId().intValue(),
