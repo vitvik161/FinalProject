@@ -1,6 +1,7 @@
 package org.example.server.processing.service;
 
 import lombok.AllArgsConstructor;
+import org.example.common.Response;
 import org.example.server.processing.AccountDTO;
 import org.example.server.processing.CardDTO;
 import org.example.server.processing.CustDTO;
@@ -13,6 +14,7 @@ import org.example.server.processing.repository.CustCrudRepository;
 import org.springframework.stereotype.Service;
 import lombok.extern.java.Log;
 
+import java.awt.geom.RectangularShape;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,14 +26,19 @@ public class CustService {
     private AccountCrudRepository accountCrudRepository;
     private CardCrudRepository cardCrudRepository;
 
-    public CardDTO getCardDTO(String pan){
+    public CardDTO getCardDTO(String pan) {
         Card card = cardCrudRepository.getCardByPan(pan);
-        //Account account = accountCrudRepository.findById(card.getAccid().getId()).orElseThrow(RuntimeException::new);
-        return new CardDTO( card.getId().intValue(),
+        return new CardDTO(card.getId().intValue(),
                 card.getAccid().getId().intValue(),
                 pan,
                 card.getPin()
         );
+    }
+
+    public Response getCardDTObalance(String pan, int pin) {
+        Card card = cardCrudRepository.getCardByPan(pan);
+        Account acct = accountCrudRepository.findById(card.getAccid().getId()).orElseThrow(RuntimeException::new);
+        return new Response(acct.getBalance());
     }
 
     public CustDTO getCustDTO(long id) {
@@ -56,6 +63,36 @@ public class CustService {
                 cust.getName(),
                 accountDTOList
         );
+    }
+
+    public List<CustDTO> getAllCustDTO() {
+
+        Iterable<Cust> clientIterable = custCrudRepository.findAll();
+        List<CustDTO> clients = new ArrayList<>();
+
+        for (Cust cust : clientIterable) {
+
+            Iterable<Account> accounts = cust.getAccounts();
+            List<AccountDTO> accountDTOList = new ArrayList<>();
+
+            for (Account account : accounts) {
+                Account acct = accountCrudRepository.findById(account.getId()).orElseThrow(RuntimeException::new);
+
+                Iterable<Card> cards = acct.getCards();
+                List<CardDTO> cardDTOList = new ArrayList<>();
+
+                for (Card card : cards) {
+                    cardDTOList.add(new CardDTO(card.getId().intValue(), account.getId().intValue(), card.getPan(), card.getPin()));
+                }
+                accountDTOList.add(new AccountDTO(account.getId().intValue(), cust.getId().intValue(), account.getBalance(), cardDTOList));
+            }
+
+            clients.add(new CustDTO(cust.getId().intValue(),
+                    cust.getName(),
+                    accountDTOList
+            ));
+        }
+        return clients;
     }
 
 }
