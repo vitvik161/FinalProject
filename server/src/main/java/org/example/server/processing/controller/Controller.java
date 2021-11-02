@@ -18,41 +18,25 @@ public class Controller {
 
     private CustService custService;
 
-    @GetMapping("/hosts/{hostId}/customers/{custId}")
-    public CustDTO getByIdCustomerInfo(@PathVariable Long hostId, @PathVariable("custId") Long custId) {
-        if (hostId != 1) {
-            throw new RuntimeException();
-        }
+    @GetMapping("/customers/{custId}")
+    public CustDTO getByIdCustomerInfo(@PathVariable("custId") Long custId) {
         return custService.getCustDTO(custId);
     }
 
-    @GetMapping("/hosts/{hostId}/customers")
-    public List<CustDTO> getAllCustomersInfo(@PathVariable Long hostId) {
-        if (hostId != 1) {
-            throw new RuntimeException();
-        }
+    @GetMapping("/customers")
+    public List<CustDTO> getAllCustomersInfo() {
         return custService.getAllCustDTO();
     }
 
-    @GetMapping("/hosts/{hostId}/cards/{cardPan}")
-    public CardDTO getCardInfo(@PathVariable Long hostId, @PathVariable("cardPan") String cardPan) {
-        if (hostId != 1) {
-            throw new RuntimeException();
-        }
+    @GetMapping("/cards/{cardPan}")
+    public CardDTO getCardInfo(@PathVariable("cardPan") String cardPan) {
         return custService.getCardDTO(cardPan);
     }
 
-    @PostMapping("/hosts/{hostId}/cards/{cardPan}/pins/{cardPin}")
-    public Response getBalance(@PathVariable("hostId") Long hostId,
-                               @PathVariable("cardPan") String cardPan,
-                               @PathVariable("cardPin") int cardPin,
-                               @RequestBody Request request) {
-        if (hostId != 1) {
-            throw new RuntimeException();
-        }
-
+    @PostMapping("/cards/getBalance")
+    public Response getBalance(@RequestBody Request request) {
         log.info(request.toString());
-        Response response = custService.getCardDTObalance(cardPan,cardPin);
+        Response response = custService.getCardDTObalance(request.getPan(),request.getPin());
         log.info(response.toString());
         return response;
     }

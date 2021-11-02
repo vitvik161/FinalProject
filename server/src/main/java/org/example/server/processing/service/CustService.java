@@ -14,7 +14,6 @@ import org.example.server.processing.repository.CustCrudRepository;
 import org.springframework.stereotype.Service;
 import lombok.extern.java.Log;
 
-import java.awt.geom.RectangularShape;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +37,7 @@ public class CustService {
     public Response getCardDTObalance(String pan, int pin) {
         Card card = cardCrudRepository.getCardByPan(pan);
         Account acct = accountCrudRepository.findById(card.getAccid().getId()).orElseThrow(RuntimeException::new);
-        return new Response(acct.getBalance());
+        return card.getPin() == pin ? new Response(acct.getBalance()) : new Response(-1);
     }
 
     public CustDTO getCustDTO(long id) {
